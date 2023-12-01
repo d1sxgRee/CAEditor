@@ -9,8 +9,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->verticalLayout->insertWidget(0, &canvas);
     scm_init_guile();
-    scm_c_eval_string("(display \"Hello, Scheme world!\")");
     connect(ui->schemeButton, &QPushButton::clicked, this, &MainWindow::evalScript);
+    QString initialСode("(set! *random-state* (random-state-from-platform)   ; Random seed for PRNG\n"
+                        "(define cell-update ()\n"
+                        "  (random 4))\n");
+    ui->schemeCode->setText(initialСode);
 }
 
 MainWindow::~MainWindow()
