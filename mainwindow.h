@@ -16,6 +16,9 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void evalScript();
+
 private:
     Ui::MainWindow *ui;
     Canvas canvas;
