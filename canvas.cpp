@@ -54,10 +54,9 @@ void Canvas::resumeTimer()
 
 void Canvas::onTimerEvent()
 {
-    QRandomGenerator* rng = QRandomGenerator::system();
     for(int y = 0; y < 100; y++){
         for(int x = 0; x < 100; x++){
-            world[y][x] = rng->bounded(4);
+            world[y][x] = scm_to_int(scm_call_0(cellUpdate));
         }
     }
     for(int y = 0; y < 100; y++){
