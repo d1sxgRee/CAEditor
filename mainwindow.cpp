@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->schemeButton, &QPushButton::clicked, this, &MainWindow::evalScript);
     connect(ui->playButton, &QPushButton::clicked, &canvas, &Canvas::resumeTimer);
     QString initialСode("(set! *random-state* (random-state-from-platform))   ; Random seed for PRNG\n"
-                        "(define (cell-update)\n"
+                        "(define (cell-update itself neighbours)\n"
                         "  (random 4))\n");
     ui->schemeCode->setText(initialСode);
 }
