@@ -10,8 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->verticalLayout->insertWidget(0, &canvas);
     scm_init_guile();
     connect(ui->schemeButton, &QPushButton::clicked, this, &MainWindow::evalScript);
-    QString initialСode("(set! *random-state* (random-state-from-platform)   ; Random seed for PRNG\n"
-                        "(define cell-update ()\n"
+    connect(ui->playButton, &QPushButton::clicked, &canvas, &Canvas::resumeTimer);
+    QString initialСode("(set! *random-state* (random-state-from-platform))   ; Random seed for PRNG\n"
+                        "(define (cell-update)\n"
                         "  (random 4))\n");
     ui->schemeCode->setText(initialСode);
 }
@@ -26,6 +27,7 @@ void MainWindow::evalScript()
     char* rvalue;
     SCM res;
     res = scm_c_eval_string(ui->schemeCode->toPlainText().toStdString().c_str());
-    rvalue = scm_to_utf8_stringn(res, NULL);
-    qDebug(rvalue);
+    SCM f;
+    f = scm_variable_ref(scm_c_lookup("cell-update"));
+    canvas.setUpdateFunction(f);
 }

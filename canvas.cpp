@@ -6,7 +6,6 @@ Canvas::Canvas(QWidget *parent)
     : QWidget{parent}, image{QImage(100, 100, QImage::Format_ARGB32)}
 {
     connect(&timer, &QTimer::timeout, this, &Canvas::onTimerEvent);
-    timer.start(1000);
 
     QRandomGenerator* rng = QRandomGenerator::system();
     for(int y = 0; y < 100; y++){
@@ -32,6 +31,7 @@ Canvas::Canvas(QWidget *parent)
             }
         }
     }
+    cellUpdate = SCM_UNDEFINED;
 }
 
 void Canvas::paintEvent(QPaintEvent *)
@@ -40,6 +40,16 @@ void Canvas::paintEvent(QPaintEvent *)
     QRect rect(0, 0, 400, 400);
 
     painter.drawImage(rect, image);
+}
+
+void Canvas::setUpdateFunction(SCM f)
+{
+    cellUpdate = f;
+}
+
+void Canvas::resumeTimer()
+{
+    timer.start(1000);
 }
 
 void Canvas::onTimerEvent()
