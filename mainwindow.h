@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QAction>
 #include <canvas.h>
 
 QT_BEGIN_NAMESPACE
@@ -18,9 +19,11 @@ public:
 
 public slots:
     void evalScript();
+    void saveCode();
 
 private:
     Ui::MainWindow *ui;
     Canvas canvas;
+    QAction saveCodeAction;
 };
 #endif // MAINWINDOW_H
