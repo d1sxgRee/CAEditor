@@ -20,10 +20,12 @@ public:
 public slots:
     void evalScript();
     void saveCode();
+    void loadCode();
 
 private:
     Ui::MainWindow *ui;
     Canvas canvas;
     QAction saveCodeAction;
+    QAction loadCodeAction;
 };
 #endif // MAINWINDOW_H
