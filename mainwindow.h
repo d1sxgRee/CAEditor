@@ -21,11 +21,13 @@ public slots:
     void evalScript();
     void saveCode();
     void loadCode();
+    void saveField();
 
 private:
     Ui::MainWindow *ui;
     Canvas *canvas;
     QAction saveCodeAction;
     QAction loadCodeAction;
+    QAction saveFieldAction;
 };
 #endif // MAINWINDOW_H
