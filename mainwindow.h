@@ -24,7 +24,7 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    Canvas canvas;
+    Canvas *canvas;
     QAction saveCodeAction;
     QAction loadCodeAction;
 };

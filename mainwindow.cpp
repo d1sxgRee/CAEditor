@@ -10,18 +10,19 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , canvas(new Canvas(this, 100))
     , saveCodeAction(QIcon::fromTheme("document-save"), "&Save")
     , loadCodeAction(QIcon::fromTheme("document-open"), "&Open")
 {
     ui->setupUi(this);
-    ui->verticalLayout->insertWidget(0, &canvas);
+    ui->verticalLayout->insertWidget(0, canvas);
     saveCodeAction.setShortcut(QKeySequence::Save);
     ui->menu_File->addAction(&saveCodeAction);
     loadCodeAction.setShortcut(QKeySequence::Open);
     ui->menu_File->addAction(&loadCodeAction);
     scm_init_guile();
     connect(ui->schemeButton, &QPushButton::clicked, this, &MainWindow::evalScript);
-    connect(ui->playButton, &QPushButton::clicked, &canvas, &Canvas::resumeTimer);
+    connect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
     connect(&saveCodeAction, &QAction::triggered, this, &MainWindow::saveCode);
     connect(&loadCodeAction, &QAction::triggered, this, &MainWindow::loadCode);
     QString initialСode("(set! *random-state* (random-state-from-platform))   ; Random seed for PRNG\n"
@@ -42,7 +43,7 @@ void MainWindow::evalScript()
     res = scm_c_eval_string(ui->schemeCode->toPlainText().toStdString().c_str());
     SCM f;
     f = scm_variable_ref(scm_c_lookup("cell-update"));
-    canvas.setUpdateFunction(f);
+    canvas->setUpdateFunction(f);
 }
 
 void MainWindow::saveCode()
