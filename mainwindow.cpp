@@ -98,4 +98,5 @@ void MainWindow::loadField()
     canvas = new Canvas(this, canvasJson);
     delete canvas1;
     ui->verticalLayout->insertWidget(0, canvas);
+    connect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
 }

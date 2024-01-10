@@ -50,6 +50,24 @@ Canvas::Canvas(QWidget *parent, QJsonDocument fieldJson)
     for (int i = 0; i < n*n; i++){
         world[i % n][i / n] = worldArray[i].toInt();
     }
+    for(int y = 0; y < n; y++){
+        for(int x = 0; x < n; x++){
+            switch (world[y][x]) {
+            case 0:
+                image.setPixel(x, y, 0xffff8800);
+                break;
+            case 1:
+                image.setPixel(x, y, 0xffcc4400);
+                break;
+            case 2:
+                image.setPixel(x, y, 0xff880000);
+                break;
+            default:
+                image.setPixel(x, y, 0xff660033);
+                break;
+            }
+        }
+    }
     cellUpdate = SCM_UNDEFINED;
 }
 
