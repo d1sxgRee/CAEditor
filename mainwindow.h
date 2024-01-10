@@ -22,6 +22,7 @@ public slots:
     void saveCode();
     void loadCode();
     void saveField();
+    void loadField();
 
 private:
     Ui::MainWindow *ui;
@@ -29,5 +30,6 @@ private:
     QAction saveCodeAction;
     QAction loadCodeAction;
     QAction saveFieldAction;
+    QAction loadFieldAction;
 };
 #endif // MAINWINDOW_H

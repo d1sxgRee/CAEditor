@@ -12,6 +12,7 @@ class Canvas : public QWidget
     Q_OBJECT
 public:
     explicit Canvas(QWidget *parent = nullptr, int n = 100);
+    explicit Canvas(QWidget *parent, QJsonDocument fieldJson);
     void paintEvent(QPaintEvent*) override;
     QJsonDocument toJson();
 

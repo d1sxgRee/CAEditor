@@ -5,7 +5,8 @@
 #include <QRandomGenerator>
 
 Canvas::Canvas(QWidget *parent, int n)
-    : QWidget{parent}, image{QImage(n, n, QImage::Format_ARGB32)}
+    : QWidget{parent}
+    , image{QImage(n, n, QImage::Format_ARGB32)}
     , n(n)
 {
     connect(&timer, &QTimer::timeout, this, &Canvas::onTimerEvent);
@@ -34,6 +35,20 @@ Canvas::Canvas(QWidget *parent, int n)
                 break;
             }
         }
+    }
+    cellUpdate = SCM_UNDEFINED;
+}
+
+Canvas::Canvas(QWidget *parent, QJsonDocument fieldJson)
+    : QWidget{parent}
+{
+    QJsonObject object = fieldJson.object();
+    n = object["n"].toInt();
+    image = QImage(n, n, QImage::Format_ARGB32);
+    connect(&timer, &QTimer::timeout, this, &Canvas::onTimerEvent);
+    QJsonArray worldArray = object["world"].toArray();
+    for (int i = 0; i < n*n; i++){
+        world[i % n][i / n] = worldArray[i].toInt();
     }
     cellUpdate = SCM_UNDEFINED;
 }

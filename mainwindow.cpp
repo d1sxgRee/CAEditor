@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     , saveCodeAction(QIcon::fromTheme("document-save"), "&Save")
     , loadCodeAction(QIcon::fromTheme("document-open"), "&Open")
     , saveFieldAction("Save field state")
+    , loadFieldAction("Open field file")
 {
     ui->setupUi(this);
     ui->verticalLayout->insertWidget(0, canvas);
@@ -22,12 +23,14 @@ MainWindow::MainWindow(QWidget *parent)
     loadCodeAction.setShortcut(QKeySequence::Open);
     ui->menu_File->addAction(&loadCodeAction);
     ui->menu_File->addAction(&saveFieldAction);
+    ui->menu_File->addAction(&loadFieldAction);
     scm_init_guile();
     connect(ui->schemeButton, &QPushButton::clicked, this, &MainWindow::evalScript);
     connect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
     connect(&saveCodeAction, &QAction::triggered, this, &MainWindow::saveCode);
     connect(&loadCodeAction, &QAction::triggered, this, &MainWindow::loadCode);
     connect(&saveFieldAction, &QAction::triggered, this, &MainWindow::saveField);
+    connect(&loadFieldAction, &QAction::triggered, this, &MainWindow::loadField);
     QString initialСode("(set! *random-state* (random-state-from-platform))   ; Random seed for PRNG\n"
                         "(define (cell-update itself neighbours)\n"
                         "  (random 4))\n");
@@ -80,4 +83,19 @@ void MainWindow::saveField()
     if (!saveFile.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
     saveFile.write(canvas->toJson().toJson());
+}
+
+void MainWindow::loadField()
+{
+    QString loadFileName = QFileDialog::getOpenFileName(this, "open field file", QString(), "*.json");
+    QFile loadFile(loadFileName);
+    if (!loadFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+    ui->verticalLayout->removeWidget(canvas);
+    Canvas *canvas1 = canvas;
+    disconnect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
+    QJsonDocument canvasJson = QJsonDocument::fromJson(loadFile.readAll());
+    canvas = new Canvas(this, canvasJson);
+    delete canvas1;
+    ui->verticalLayout->insertWidget(0, canvas);
 }
