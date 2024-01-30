@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
                         "(define (cell-update itself neighbours)\n"
                         "  (random 4))\n");
     ui->schemeCode->setText(initialСode);
+    hghlghtr = new Highlighter(ui->schemeCode->document());
 }
 
 MainWindow::~MainWindow()

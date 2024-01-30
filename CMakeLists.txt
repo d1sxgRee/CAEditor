@@ -20,6 +20,8 @@ pkg_check_modules(deps REQUIRED IMPORTED_TARGET guile-3.0)
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
+        highlighter.h
+        highlighter.cpp
         mainwindow.h
         mainwindow.ui
         canvas.h

@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 #include <QAction>
-#include <canvas.h>
+#include <QSyntaxHighlighter>
+#include "canvas.h"
+#include "highlighter.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,9 +29,11 @@ public slots:
 private:
     Ui::MainWindow *ui;
     Canvas *canvas;
+    Highlighter *hghlghtr;
     QAction saveCodeAction;
     QAction loadCodeAction;
     QAction saveFieldAction;
     QAction loadFieldAction;
 };
+
 #endif // MAINWINDOW_H
