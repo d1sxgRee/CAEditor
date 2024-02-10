@@ -34,6 +34,7 @@ private:
     QAction loadCodeAction;
     QAction saveFieldAction;
     QAction loadFieldAction;
+    QFont monospaseFont;
 };
 
 #endif // MAINWINDOW_H

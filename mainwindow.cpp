@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     , loadCodeAction(QIcon::fromTheme("document-open"), "&Open")
     , saveFieldAction("Save field state")
     , loadFieldAction("Open field file")
+    , monospaseFont("monospase")
 {
     ui->setupUi(this);
     ui->verticalLayout->insertWidget(0, canvas);
@@ -35,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
                         "(define (cell-update itself neighbours)\n"
                         "  (random 4))\n");
     ui->schemeCode->setText(initialСode);
+    monospaseFont.setStyleHint(QFont::Monospace);
+    ui->schemeCode->setFont(monospaseFont);
     hghlghtr = new Highlighter(ui->schemeCode->document());
 }
 

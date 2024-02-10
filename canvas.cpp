@@ -15,7 +15,7 @@ Canvas::Canvas(QWidget *parent, int n)
 
     for(int y = 0; y < n; y++){
         for(int x = 0; x < n; x++){
-            world[y][x] = rng->bounded(4);
+            world[y][x] = rng->bounded(2);
         }
     }
     for(int y = 0; y < n; y++){
