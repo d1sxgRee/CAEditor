@@ -26,6 +26,7 @@ private:
     QTimer timer;
     QImage image;
     std::vector<std::vector<int>> world;
+    std::vector<uint> colors;
     SCM cellUpdate;
 
 signals:

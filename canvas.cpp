@@ -12,22 +12,12 @@ Canvas::Canvas(QWidget *parent, int n)
 
     world.resize(n, std::vector<int>(n, 0));
 
+    colors.push_back(0xffff8800);
+    colors.push_back(0xffcc4400);
+
     for(int y = 0; y < n; y++){
         for(int x = 0; x < n; x++){
-            switch (world[y][x]) {
-            case 0:
-                image.setPixel(x, y, 0xffff8800);
-                break;
-            case 1:
-                image.setPixel(x, y, 0xffcc4400);
-                break;
-            case 2:
-                image.setPixel(x, y, 0xff880000);
-                break;
-            default:
-                image.setPixel(x, y, 0xff660033);
-                break;
-            }
+            image.setPixel(x, y, colors[world[x][y]]);
         }
     }
     cellUpdate = SCM_UNDEFINED;
@@ -41,26 +31,17 @@ Canvas::Canvas(QWidget *parent, QJsonDocument fieldJson)
     world.resize(n, std::vector<int>(n, 0));
     image = QImage(n, n, QImage::Format_ARGB32);
     connect(&timer, &QTimer::timeout, this, &Canvas::onTimerEvent);
+    QJsonArray colorsArray = object["colors"].toArray();
+    for (auto i : colorsArray){
+        colors.push_back(i.toInt());
+    }
     QJsonArray worldArray = object["world"].toArray();
     for (int i = 0; i < n*n; i++){
         world[i % n][i / n] = worldArray[i].toInt();
     }
     for(int y = 0; y < n; y++){
         for(int x = 0; x < n; x++){
-            switch (world[y][x]) {
-            case 0:
-                image.setPixel(x, y, 0xffff8800);
-                break;
-            case 1:
-                image.setPixel(x, y, 0xffcc4400);
-                break;
-            case 2:
-                image.setPixel(x, y, 0xff880000);
-                break;
-            default:
-                image.setPixel(x, y, 0xff660033);
-                break;
-            }
+            image.setPixel(x, y, colors[world[x][y]]);
         }
     }
     cellUpdate = SCM_UNDEFINED;
@@ -78,6 +59,11 @@ QJsonDocument Canvas::toJson()
 {
     QJsonObject canvasCondition = QJsonObject();
     canvasCondition.insert("n", n);
+    QJsonArray jsonColors = QJsonArray();
+    for(auto i : colors){
+        jsonColors.append(int(i));
+    }
+    canvasCondition.insert("colors", jsonColors);
     QJsonArray jsonWorld = QJsonArray();
     for(int y = 0; y < n; y++){
         for(int x = 0; x < n; x++){
@@ -118,20 +104,21 @@ void Canvas::onTimerEvent()
     }
     for(int y = 0; y < n; y++){
         for(int x = 0; x < n; x++){
-            switch (world[y][x]) {
-            case 0:
-                image.setPixel(x, y, 0xffff8800);
-                break;
-            case 1:
-                image.setPixel(x, y, 0xffcc4400);
-                break;
-            case 2:
-                image.setPixel(x, y, 0xff880000);
-                break;
-            default:
-                image.setPixel(x, y, 0xff660033);
-                break;
-            }
+            image.setPixel(x, y, colors[world[x][y]]);
+//            switch (world[y][x]) {
+//            case 0:
+//                image.setPixel(x, y, 0xffff8800);
+//                break;
+//            case 1:
+//                image.setPixel(x, y, 0xffcc4400);
+//                break;
+//            case 2:
+//                image.setPixel(x, y, 0xff880000);
+//                break;
+//            default:
+//                image.setPixel(x, y, 0xff660033);
+//                break;
+//            }
         }
     }
     repaint();
