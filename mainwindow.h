@@ -25,6 +25,7 @@ public slots:
     void loadCode();
     void saveField();
     void loadField();
+    void parenHighlight();
 
 private:
     Ui::MainWindow *ui;
@@ -35,6 +36,7 @@ private:
     QAction saveFieldAction;
     QAction loadFieldAction;
     QFont monospaseFont;
+    int highlightedSymbol;
 };
 
 #endif // MAINWINDOW_H

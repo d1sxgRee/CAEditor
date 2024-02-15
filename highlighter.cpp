@@ -6,7 +6,7 @@ Highlighter::Highlighter(QTextDocument *parent)
     keywordFormat.setForeground(QColorConstants::Svg::blueviolet);
     keywordFormat.setFontWeight(QFont::Bold);
     commentFormat.setForeground(QColorConstants::Svg::darkgray);
-
+    parenFormat.setBackground(QColorConstants::Svg::yellow);
 }
 
 void Highlighter::highlightBlock(const QString &text)
@@ -18,4 +18,14 @@ void Highlighter::highlightBlock(const QString &text)
             setFormat(currentmatch.capturedStart(), currentmatch.capturedLength(), highlightingRules[i].format);
         }
     }
+}
+
+void Highlighter::highlightParen(int symbolIndex)
+{
+    setFormat(symbolIndex, 1, parenFormat);
+}
+
+void Highlighter::unhighlightParen(int symbolIndex)
+{
+    setFormat(symbolIndex, 1, plainFormat);
 }

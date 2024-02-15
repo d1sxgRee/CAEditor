@@ -3,6 +3,7 @@
 
 #include <QSyntaxHighlighter>
 #include <QRegularExpression>
+#include <QTextEdit>
 
 #define RULECOUNT 8
 
@@ -12,6 +13,8 @@ class Highlighter : public QSyntaxHighlighter
 
 public:
     Highlighter(QTextDocument *parent = nullptr);
+    void highlightParen(int symbolIndex);
+    void unhighlightParen(int symbolIndex);
 
 protected:
     void highlightBlock(const QString &text) override;
@@ -24,6 +27,8 @@ private:
     };
     QTextCharFormat keywordFormat;
     QTextCharFormat commentFormat;
+    QTextCharFormat parenFormat;
+    QTextCharFormat plainFormat;
     HighlightingRule highlightingRules [RULECOUNT] = {
         {QRegularExpression("\\bdefine\\b"), keywordFormat},
         {QRegularExpression("\\bset!\\s"), keywordFormat},

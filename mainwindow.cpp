@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     , saveFieldAction("Save field state")
     , loadFieldAction("Open field file")
     , monospaseFont("monospase")
+    , highlightedSymbol(0)
 {
     ui->setupUi(this);
     ui->verticalLayout->insertWidget(0, canvas);
@@ -32,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&loadCodeAction, &QAction::triggered, this, &MainWindow::loadCode);
     connect(&saveFieldAction, &QAction::triggered, this, &MainWindow::saveField);
     connect(&loadFieldAction, &QAction::triggered, this, &MainWindow::loadField);
+    connect(ui->schemeCode, &QTextEdit::cursorPositionChanged, this, &MainWindow::parenHighlight);
     QString initialСode("(set! *random-state* (random-state-from-platform))   ; Random seed for PRNG\n"
                         "(define (cell-update itself neighbours)\n"
                         "  (random 4))\n");
@@ -103,4 +105,43 @@ void MainWindow::loadField()
     delete canvas1;
     ui->verticalLayout->insertWidget(0, canvas);
     connect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
+}
+
+void MainWindow::parenHighlight()
+{
+    hghlghtr->unhighlightParen(highlightedSymbol);
+    QString code = ui->schemeCode->toPlainText();
+    int curPos = ui->schemeCode->textCursor().position();
+    QChar curChar = code[curPos];
+    int endPos = code.length() - 1;
+    int parenCounter = 1;
+    if (curChar == '('){
+        curPos++;
+        while (curPos < endPos){
+            if (curPos == '(')
+                parenCounter++;
+            else if (curPos == ')')
+                parenCounter--;
+            if (parenCounter == 0){
+                highlightedSymbol = curPos;
+                hghlghtr->highlightParen(highlightedSymbol);
+                return;
+            }
+            curPos++;
+        }
+    } else if (curChar == ')'){
+        curPos--;
+        while (curPos >= 0){
+            if (curPos == ')')
+                parenCounter++;
+            else if (curPos == '(')
+                parenCounter--;
+            if (parenCounter == 0){
+                highlightedSymbol = curPos;
+                hghlghtr->highlightParen(highlightedSymbol);
+                return;
+            }
+            curPos--;
+        }
+    }
 }

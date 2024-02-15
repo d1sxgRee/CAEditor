@@ -105,20 +105,6 @@ void Canvas::onTimerEvent()
     for(int y = 0; y < n; y++){
         for(int x = 0; x < n; x++){
             image.setPixel(x, y, colors[world[x][y]]);
-//            switch (world[y][x]) {
-//            case 0:
-//                image.setPixel(x, y, 0xffff8800);
-//                break;
-//            case 1:
-//                image.setPixel(x, y, 0xffcc4400);
-//                break;
-//            case 2:
-//                image.setPixel(x, y, 0xff880000);
-//                break;
-//            default:
-//                image.setPixel(x, y, 0xff660033);
-//                break;
-//            }
         }
     }
     repaint();
