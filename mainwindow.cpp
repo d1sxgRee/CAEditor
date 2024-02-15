@@ -68,11 +68,11 @@ void MainWindow::saveCode()
 
 void MainWindow::loadCode()
 {
-    ui->schemeCode->clear();
     QString loadFileName = QFileDialog::getOpenFileName(this, "open scheme code file", QString(), "*.scm");
     QFile loadFile(loadFileName);
     if (!loadFile.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
+    ui->schemeCode->clear();
     QTextStream in(&loadFile);
     while(!in.atEnd()){
         QString line = in.readLine();

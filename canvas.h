@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QImage>
 #include <QJsonDocument>
+#include <vector>
 #include <libguile.h>
 
 class Canvas : public QWidget
@@ -24,7 +25,7 @@ private:
     int n;
     QTimer timer;
     QImage image;
-    int world[100][100];
+    std::vector<std::vector<int>> world;
     SCM cellUpdate;
 
 signals:

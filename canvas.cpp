@@ -2,7 +2,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QPainter>
-#include <QRandomGenerator>
 
 Canvas::Canvas(QWidget *parent, int n)
     : QWidget{parent}
@@ -11,13 +10,8 @@ Canvas::Canvas(QWidget *parent, int n)
 {
     connect(&timer, &QTimer::timeout, this, &Canvas::onTimerEvent);
 
-    QRandomGenerator* rng = QRandomGenerator::system();
+    world.resize(n, std::vector<int>(n, 0));
 
-    for(int y = 0; y < n; y++){
-        for(int x = 0; x < n; x++){
-            world[y][x] = rng->bounded(2);
-        }
-    }
     for(int y = 0; y < n; y++){
         for(int x = 0; x < n; x++){
             switch (world[y][x]) {
@@ -44,6 +38,7 @@ Canvas::Canvas(QWidget *parent, QJsonDocument fieldJson)
 {
     QJsonObject object = fieldJson.object();
     n = object["n"].toInt();
+    world.resize(n, std::vector<int>(n, 0));
     image = QImage(n, n, QImage::Format_ARGB32);
     connect(&timer, &QTimer::timeout, this, &Canvas::onTimerEvent);
     QJsonArray worldArray = object["world"].toArray();
