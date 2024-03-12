@@ -26,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->menu_File->addAction(&loadCodeAction);
     ui->menu_File->addAction(&saveFieldAction);
     ui->menu_File->addAction(&loadFieldAction);
+    hghlghtr = new Highlighter(ui->schemeCode->document());
     scm_init_guile();
     connect(ui->schemeButton, &QPushButton::clicked, this, &MainWindow::evalScript);
     connect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
@@ -40,7 +41,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->schemeCode->setText(initialСode);
     monospaseFont.setStyleHint(QFont::Monospace);
     ui->schemeCode->setFont(monospaseFont);
-    hghlghtr = new Highlighter(ui->schemeCode->document());
 }
 
 MainWindow::~MainWindow()
@@ -118,9 +118,9 @@ void MainWindow::parenHighlight()
     if (curChar == '('){
         curPos++;
         while (curPos < endPos){
-            if (curPos == '(')
+            if (code[curPos] == '(')
                 parenCounter++;
-            else if (curPos == ')')
+            else if (code[curPos] == ')')
                 parenCounter--;
             if (parenCounter == 0){
                 highlightedSymbol = curPos;
@@ -132,9 +132,9 @@ void MainWindow::parenHighlight()
     } else if (curChar == ')'){
         curPos--;
         while (curPos >= 0){
-            if (curPos == ')')
+            if (code[curPos] == ')')
                 parenCounter++;
-            else if (curPos == '(')
+            else if (code[curPos] == '(')
                 parenCounter--;
             if (parenCounter == 0){
                 highlightedSymbol = curPos;

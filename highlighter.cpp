@@ -22,10 +22,17 @@ void Highlighter::highlightBlock(const QString &text)
 
 void Highlighter::highlightParen(int symbolIndex)
 {
-    setFormat(symbolIndex, 1, parenFormat);
+    QTextCursor cursor(document());
+    cursor.setPosition(symbolIndex);
+    cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+    cursor.setCharFormat(parenFormat);
+
 }
 
 void Highlighter::unhighlightParen(int symbolIndex)
 {
-    setFormat(symbolIndex, 1, plainFormat);
+    QTextCursor cursor(document());
+    cursor.setPosition(symbolIndex);
+    cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor);
+    cursor.setCharFormat(plainFormat);
 }
