@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&saveFieldAction, &QAction::triggered, this, &MainWindow::saveField);
     connect(&loadFieldAction, &QAction::triggered, this, &MainWindow::loadField);
     connect(ui->schemeCode, &QTextEdit::cursorPositionChanged, this, &MainWindow::parenHighlight);
+    connect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
     QString initialСode("(set! *random-state* (random-state-from-platform))   ; Random seed for PRNG\n"
                         "(define (cell-update itself neighbours)\n"
                         "  (random 4))\n");
@@ -100,11 +101,13 @@ void MainWindow::loadField()
     ui->verticalLayout->removeWidget(canvas);
     Canvas *canvas1 = canvas;
     disconnect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
+    disconnect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
     QJsonDocument canvasJson = QJsonDocument::fromJson(loadFile.readAll());
     canvas = new Canvas(this, canvasJson);
     delete canvas1;
     ui->verticalLayout->insertWidget(0, canvas);
     connect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
+    connect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
 }
 
 void MainWindow::parenHighlight()

@@ -20,6 +20,7 @@ public:
 public slots:
     void setUpdateFunction(SCM f);
     void resumeTimer();
+    void clearCanvas();
 
 private:
     int n;
@@ -28,6 +29,7 @@ private:
     std::vector<std::vector<int>> world;
     std::vector<uint> colors;
     SCM cellUpdate;
+    void drawImage();
 
 signals:
 

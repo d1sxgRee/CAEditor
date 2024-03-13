@@ -93,16 +93,12 @@
            <number>10</number>
           </property>
           <item>
-           <widget class="QPushButton" name="paintButton">
-            <property name="text">
-             <string>PAINT</string>
-            </property>
-           </widget>
+           <widget class="QComboBox" name="colorSelect"/>
           </item>
           <item>
-           <widget class="QPushButton" name="eraiseButton">
+           <widget class="QPushButton" name="clearButton">
             <property name="text">
-             <string>ERAISE</string>
+             <string>CLEAR</string>
             </property>
            </widget>
           </item>

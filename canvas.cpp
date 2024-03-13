@@ -15,11 +15,7 @@ Canvas::Canvas(QWidget *parent, int n)
     colors.push_back(0xffff8800);
     colors.push_back(0xffcc4400);
 
-    for(int y = 0; y < n; y++){
-        for(int x = 0; x < n; x++){
-            image.setPixel(x, y, colors[world[x][y]]);
-        }
-    }
+    drawImage();
     cellUpdate = SCM_UNDEFINED;
 }
 
@@ -39,11 +35,7 @@ Canvas::Canvas(QWidget *parent, QJsonDocument fieldJson)
     for (int i = 0; i < n*n; i++){
         world[i % n][i / n] = worldArray[i].toInt();
     }
-    for(int y = 0; y < n; y++){
-        for(int x = 0; x < n; x++){
-            image.setPixel(x, y, colors[world[x][y]]);
-        }
-    }
+    drawImage();
     cellUpdate = SCM_UNDEFINED;
 }
 
@@ -84,6 +76,26 @@ void Canvas::resumeTimer()
     timer.start(1000);
 }
 
+void Canvas::clearCanvas()
+{
+    for(int y = 0; y < n; y++){
+        for(int x = 0; x < n; x++){
+            world[x][y] = 0;
+        }
+    }
+    drawImage();
+    repaint();
+}
+
+void Canvas::drawImage()
+{
+    for(int y = 0; y < n; y++){
+        for(int x = 0; x < n; x++){
+            image.setPixel(x, y, colors[world[x][y]]);
+        }
+    }
+}
+
 void Canvas::onTimerEvent()
 {
     int oldWorld[n][n];
@@ -102,10 +114,6 @@ void Canvas::onTimerEvent()
             world[x][y] = scm_to_int64(scm_call_2(cellUpdate, scm_from_int64(oldWorld[x][y]), neighbours));
         }
     }
-    for(int y = 0; y < n; y++){
-        for(int x = 0; x < n; x++){
-            image.setPixel(x, y, colors[world[x][y]]);
-        }
-    }
+    drawImage();
     repaint();
 }
