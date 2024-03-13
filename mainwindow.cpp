@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     scm_init_guile();
     connect(ui->schemeButton, &QPushButton::clicked, this, &MainWindow::evalScript);
     connect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
+    connect(ui->pauseButton, &QPushButton::clicked, canvas, &Canvas::pauseTimer);
     connect(&saveCodeAction, &QAction::triggered, this, &MainWindow::saveCode);
     connect(&loadCodeAction, &QAction::triggered, this, &MainWindow::loadCode);
     connect(&saveFieldAction, &QAction::triggered, this, &MainWindow::saveField);
@@ -101,12 +102,14 @@ void MainWindow::loadField()
     ui->verticalLayout->removeWidget(canvas);
     Canvas *canvas1 = canvas;
     disconnect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
+    disconnect(ui->pauseButton, &QPushButton::clicked, canvas, &Canvas::pauseTimer);
     disconnect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
     QJsonDocument canvasJson = QJsonDocument::fromJson(loadFile.readAll());
     canvas = new Canvas(this, canvasJson);
     delete canvas1;
     ui->verticalLayout->insertWidget(0, canvas);
     connect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
+    connect(ui->pauseButton, &QPushButton::clicked, canvas, &Canvas::pauseTimer);
     connect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
 }
 

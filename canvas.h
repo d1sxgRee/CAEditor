@@ -20,6 +20,7 @@ public:
 public slots:
     void setUpdateFunction(SCM f);
     void resumeTimer();
+    void pauseTimer();
     void clearCanvas();
 
 private:

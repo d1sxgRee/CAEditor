@@ -76,6 +76,11 @@ void Canvas::resumeTimer()
     timer.start(1000);
 }
 
+void Canvas::pauseTimer()
+{
+    timer.stop();
+}
+
 void Canvas::clearCanvas()
 {
     for(int y = 0; y < n; y++){
