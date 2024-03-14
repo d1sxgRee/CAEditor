@@ -39,10 +39,14 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
     QString initialСode("(set! *random-state* (random-state-from-platform))   ; Random seed for PRNG\n"
                         "(define (cell-update itself neighbours)\n"
-                        "  (random 4))\n");
+                        "  (random 2))\n");
     ui->schemeCode->setText(initialСode);
     monospaseFont.setStyleHint(QFont::Monospace);
     ui->schemeCode->setFont(monospaseFont);
+    int cn = canvas->colorNumber();
+    for(int i = 0; i < cn; i++){
+        ui->colorSelect->addItem(QString::number(i));
+    }
 }
 
 MainWindow::~MainWindow()
@@ -52,7 +56,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::evalScript()
 {
-    char* rvalue;
     SCM res;
     res = scm_c_eval_string(ui->schemeCode->toPlainText().toStdString().c_str());
     SCM f;
@@ -111,6 +114,11 @@ void MainWindow::loadField()
     connect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
     connect(ui->pauseButton, &QPushButton::clicked, canvas, &Canvas::pauseTimer);
     connect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
+    ui->colorSelect->clear();
+    int cn = canvas->colorNumber();
+    for(int i = 0; i < cn; i++){
+        ui->colorSelect->addItem(QString::number(i));
+    }
 }
 
 void MainWindow::parenHighlight()

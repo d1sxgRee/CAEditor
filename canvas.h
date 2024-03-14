@@ -15,6 +15,7 @@ public:
     explicit Canvas(QWidget *parent = nullptr, int n = 100);
     explicit Canvas(QWidget *parent, QJsonDocument fieldJson);
     void paintEvent(QPaintEvent*) override;
+    int colorNumber();
     QJsonDocument toJson();
 
 public slots:
@@ -22,6 +23,9 @@ public slots:
     void resumeTimer();
     void pauseTimer();
     void clearCanvas();
+
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
 
 private:
     int n;
@@ -31,6 +35,7 @@ private:
     std::vector<uint> colors;
     SCM cellUpdate;
     void drawImage();
+    QPoint logicalPoint(QPoint gr);
 
 signals:
 

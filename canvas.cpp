@@ -1,6 +1,7 @@
 #include "canvas.h"
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QMouseEvent>
 #include <QPainter>
 
 Canvas::Canvas(QWidget *parent, int n)
@@ -45,6 +46,11 @@ void Canvas::paintEvent(QPaintEvent *)
     QRect rect(0, 0, 400, 400);
 
     painter.drawImage(rect, image);
+}
+
+int Canvas::colorNumber()
+{
+    return colors.size();
 }
 
 QJsonDocument Canvas::toJson()
@@ -92,6 +98,15 @@ void Canvas::clearCanvas()
     repaint();
 }
 
+void Canvas::mousePressEvent(QMouseEvent *event)
+{
+    QPoint point = logicalPoint(event->pos());
+    world[point.x()][point.y()] = 1;
+    drawImage();
+    repaint();
+    return;
+}
+
 void Canvas::drawImage()
 {
     for(int y = 0; y < n; y++){
@@ -101,10 +116,19 @@ void Canvas::drawImage()
     }
 }
 
+QPoint Canvas::logicalPoint(QPoint gr)
+{
+    return QPoint(gr.x() / 4, gr.y() / 4);
+}
+
 void Canvas::onTimerEvent()
 {
     int oldWorld[n][n];
-    std::copy(&world[0][0], &world[0][0]+n*n, &oldWorld[0][0]);
+    for(int y = 0; y < n; y++){
+        for(int x = 0; x < n; x++){
+            oldWorld[x][y] = world[x][y];
+        }
+    }
     for(int y = 0; y < n; y++){
         for(int x = 0; x < n; x++){
             SCM neighbours = scm_list_n(scm_from_int64(oldWorld[(x - 1 + n) % n][(y - 1 + n) %  n]),
@@ -117,6 +141,8 @@ void Canvas::onTimerEvent()
                                         scm_from_int64(oldWorld[(x + 1 + n) % n][(y + 1 + n) %  n]),
                                         SCM_UNDEFINED);
             world[x][y] = scm_to_int64(scm_call_2(cellUpdate, scm_from_int64(oldWorld[x][y]), neighbours));
+            qDebug("old %d:%d %d", x, y, oldWorld[x][y]);
+            qDebug("new %d:%d %d", x, y, world[x][y]);
         }
     }
     drawImage();
