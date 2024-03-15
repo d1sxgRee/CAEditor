@@ -43,9 +43,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->schemeCode->setText(initialСode);
     monospaseFont.setStyleHint(QFont::Monospace);
     ui->schemeCode->setFont(monospaseFont);
+    QImage iconBase = QImage(8, 8, QImage::Format_ARGB32);
     int cn = canvas->colorNumber();
     for(int i = 0; i < cn; i++){
-        ui->colorSelect->addItem(QString::number(i));
+        for(int x = 0; x < 8; x++){
+            for(int y = 0; y < 8; y++){
+                iconBase.setPixel(x, y, uint(canvas->getColor(i)));
+            }
+        }
+        QPixmap pixmap = QPixmap::fromImage(iconBase);
+        ui->colorSelect->addItem(QIcon(pixmap), QString::number(i));
     }
 }
 
@@ -115,9 +122,16 @@ void MainWindow::loadField()
     connect(ui->pauseButton, &QPushButton::clicked, canvas, &Canvas::pauseTimer);
     connect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
     ui->colorSelect->clear();
+    QImage iconBase = QImage(8, 8, QImage::Format_ARGB32);
     int cn = canvas->colorNumber();
     for(int i = 0; i < cn; i++){
-        ui->colorSelect->addItem(QString::number(i));
+        for(int x = 0; x < 8; x++){
+            for(int y = 0; y < 8; y++){
+                iconBase.setPixel(x, y, uint(canvas->getColor(i)));
+            }
+        }
+        QPixmap pixmap = QPixmap::fromImage(iconBase);
+        ui->colorSelect->addItem(QIcon(pixmap), QString::number(i));
     }
 }
 

@@ -53,6 +53,11 @@ int Canvas::colorNumber()
     return colors.size();
 }
 
+uint Canvas::getColor(int i)
+{
+    return colors[i];
+}
+
 QJsonDocument Canvas::toJson()
 {
     QJsonObject canvasCondition = QJsonObject();

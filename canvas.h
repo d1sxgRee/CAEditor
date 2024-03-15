@@ -16,6 +16,7 @@ public:
     explicit Canvas(QWidget *parent, QJsonDocument fieldJson);
     void paintEvent(QPaintEvent*) override;
     int colorNumber();
+    uint getColor(int i);
     QJsonDocument toJson();
 
 public slots:
