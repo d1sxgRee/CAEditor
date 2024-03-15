@@ -26,6 +26,7 @@ public slots:
     void saveField();
     void loadField();
     void parenHighlight();
+    void updateColor();
 
 private:
     Ui::MainWindow *ui;

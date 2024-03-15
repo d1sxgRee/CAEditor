@@ -8,6 +8,7 @@ Canvas::Canvas(QWidget *parent, int n)
     : QWidget{parent}
     , image{QImage(n, n, QImage::Format_ARGB32)}
     , n(n)
+    , activeColorIndex(0)
 {
     connect(&timer, &QTimer::timeout, this, &Canvas::onTimerEvent);
 
@@ -22,6 +23,7 @@ Canvas::Canvas(QWidget *parent, int n)
 
 Canvas::Canvas(QWidget *parent, QJsonDocument fieldJson)
     : QWidget{parent}
+    , activeColorIndex(0)
 {
     QJsonObject object = fieldJson.object();
     n = object["n"].toInt();
@@ -77,6 +79,11 @@ QJsonDocument Canvas::toJson()
     return QJsonDocument(canvasCondition);
 }
 
+void Canvas::setColor(int i)
+{
+    activeColorIndex = i;
+}
+
 void Canvas::setUpdateFunction(SCM f)
 {
     cellUpdate = f;
@@ -106,7 +113,7 @@ void Canvas::clearCanvas()
 void Canvas::mousePressEvent(QMouseEvent *event)
 {
     QPoint point = logicalPoint(event->pos());
-    world[point.x()][point.y()] = 1;
+    world[point.x()][point.y()] = activeColorIndex;
     drawImage();
     repaint();
     return;
@@ -146,8 +153,6 @@ void Canvas::onTimerEvent()
                                         scm_from_int64(oldWorld[(x + 1 + n) % n][(y + 1 + n) %  n]),
                                         SCM_UNDEFINED);
             world[x][y] = scm_to_int64(scm_call_2(cellUpdate, scm_from_int64(oldWorld[x][y]), neighbours));
-            qDebug("old %d:%d %d", x, y, oldWorld[x][y]);
-            qDebug("new %d:%d %d", x, y, world[x][y]);
         }
     }
     drawImage();

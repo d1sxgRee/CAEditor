@@ -18,6 +18,7 @@ public:
     int colorNumber();
     uint getColor(int i);
     QJsonDocument toJson();
+    void setColor(int i);
 
 public slots:
     void setUpdateFunction(SCM f);
@@ -35,6 +36,7 @@ private:
     std::vector<std::vector<int>> world;
     std::vector<uint> colors;
     SCM cellUpdate;
+    int activeColorIndex;
     void drawImage();
     QPoint logicalPoint(QPoint gr);
 

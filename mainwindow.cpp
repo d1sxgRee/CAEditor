@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&saveFieldAction, &QAction::triggered, this, &MainWindow::saveField);
     connect(&loadFieldAction, &QAction::triggered, this, &MainWindow::loadField);
     connect(ui->schemeCode, &QTextEdit::cursorPositionChanged, this, &MainWindow::parenHighlight);
+    connect(ui->colorSelect, &QComboBox::currentTextChanged, this, &MainWindow::updateColor);
     connect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
     QString initialСode("(set! *random-state* (random-state-from-platform))   ; Random seed for PRNG\n"
                         "(define (cell-update itself neighbours)\n"
@@ -52,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
             }
         }
         QPixmap pixmap = QPixmap::fromImage(iconBase);
-        ui->colorSelect->addItem(QIcon(pixmap), QString::number(i));
+        ui->colorSelect->addItem(QIcon(pixmap), QString::number(i), QVariant(i));
     }
 }
 
@@ -131,7 +132,7 @@ void MainWindow::loadField()
             }
         }
         QPixmap pixmap = QPixmap::fromImage(iconBase);
-        ui->colorSelect->addItem(QIcon(pixmap), QString::number(i));
+        ui->colorSelect->addItem(QIcon(pixmap), QString::number(i), QVariant(i));
     }
 }
 
@@ -172,4 +173,9 @@ void MainWindow::parenHighlight()
             curPos--;
         }
     }
+}
+
+void MainWindow::updateColor()
+{
+    canvas->setColor(ui->colorSelect->currentData().toInt());
 }
