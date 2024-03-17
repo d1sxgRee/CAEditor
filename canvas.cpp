@@ -32,7 +32,8 @@ Canvas::Canvas(QWidget *parent, QJsonDocument fieldJson)
     connect(&timer, &QTimer::timeout, this, &Canvas::onTimerEvent);
     QJsonArray colorsArray = object["colors"].toArray();
     for (auto i : colorsArray){
-        colors.push_back(i.toInt());
+        QString colorString = i.toString();
+        colors.push_back(colorString.toUInt(nullptr, 16));
     }
     QJsonArray worldArray = object["world"].toArray();
     for (int i = 0; i < n*n; i++){
@@ -66,7 +67,9 @@ QJsonDocument Canvas::toJson()
     canvasCondition.insert("n", n);
     QJsonArray jsonColors = QJsonArray();
     for(auto i : colors){
-        jsonColors.append(int(i));
+        QString colorString;
+        colorString.setNum(i, 16);
+        jsonColors.append(colorString);
     }
     canvasCondition.insert("colors", jsonColors);
     QJsonArray jsonWorld = QJsonArray();
@@ -91,7 +94,7 @@ void Canvas::setUpdateFunction(SCM f)
 
 void Canvas::resumeTimer()
 {
-    timer.start(1000);
+    timer.start(300);
 }
 
 void Canvas::pauseTimer()
