@@ -10,7 +10,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , canvas(new Canvas(this, 100))
+    , canvas(new Canvas(this, 100, 100))
     , saveCodeAction(QIcon::fromTheme("document-save"), "&Save")
     , loadCodeAction(QIcon::fromTheme("document-open"), "&Open")
     , saveFieldAction("Save field state")
@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->schemeCode, &QTextEdit::cursorPositionChanged, this, &MainWindow::parenHighlight);
     connect(ui->colorSelect, &QComboBox::currentTextChanged, this, &MainWindow::updateColor);
     connect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
+    connect(ui->nextstepButton, &QPushButton::clicked, canvas, &Canvas::onTimerEvent);
+    connect(ui->speedSlider, &QSlider::sliderReleased, this, &MainWindow::updateInterval);
     QString initialСode("(set! *random-state* (random-state-from-platform))   ; Random seed for PRNG\n"
                         "(define (cell-update itself neighbours)\n"
                         "  (random 2))\n");
@@ -115,13 +117,15 @@ void MainWindow::loadField()
     disconnect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
     disconnect(ui->pauseButton, &QPushButton::clicked, canvas, &Canvas::pauseTimer);
     disconnect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
+    disconnect(ui->nextstepButton, &QPushButton::clicked, canvas, &Canvas::onTimerEvent);
     QJsonDocument canvasJson = QJsonDocument::fromJson(loadFile.readAll());
-    canvas = new Canvas(this, canvasJson);
+    canvas = new Canvas(this, canvasJson, getInterval());
     delete canvas1;
     ui->verticalLayout->insertWidget(0, canvas);
     connect(ui->playButton, &QPushButton::clicked, canvas, &Canvas::resumeTimer);
     connect(ui->pauseButton, &QPushButton::clicked, canvas, &Canvas::pauseTimer);
     connect(ui->clearButton, &QPushButton::clicked, canvas, &Canvas::clearCanvas);
+    connect(ui->nextstepButton, &QPushButton::clicked, canvas, &Canvas::onTimerEvent);
     ui->colorSelect->clear();
     QImage iconBase = QImage(8, 8, QImage::Format_ARGB32);
     int cn = canvas->colorNumber();
@@ -178,4 +182,25 @@ void MainWindow::parenHighlight()
 void MainWindow::updateColor()
 {
     canvas->setColor(ui->colorSelect->currentData().toInt());
+}
+
+void MainWindow::updateInterval()
+{
+    canvas->setInterval(getInterval());
+    ui->speedInfo->setText(QString().number(getInterval()));
+}
+
+int MainWindow::getInterval()
+{
+    if(ui->speedSlider->value() == 0){
+        return 1000;
+    } else if(ui->speedSlider->value() == 1){
+        return 500;
+    } else if(ui->speedSlider->value() == 2){
+        return 333;
+    } else if(ui->speedSlider->value() == 3){
+        return 200;
+    } else {
+        return 100;
+    }
 }

@@ -27,6 +27,7 @@ public slots:
     void loadField();
     void parenHighlight();
     void updateColor();
+    void updateInterval();
 
 private:
     Ui::MainWindow *ui;
@@ -38,6 +39,7 @@ private:
     QAction loadFieldAction;
     QFont monospaseFont;
     int highlightedSymbol;
+    int getInterval();
 };
 
 #endif // MAINWINDOW_H

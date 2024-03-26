@@ -4,10 +4,11 @@
 #include <QMouseEvent>
 #include <QPainter>
 
-Canvas::Canvas(QWidget *parent, int n)
+Canvas::Canvas(QWidget *parent, int interval, int n)
     : QWidget{parent}
     , image{QImage(n, n, QImage::Format_ARGB32)}
     , n(n)
+    , interval(interval)
     , activeColorIndex(0)
 {
     connect(&timer, &QTimer::timeout, this, &Canvas::onTimerEvent);
@@ -21,8 +22,9 @@ Canvas::Canvas(QWidget *parent, int n)
     cellUpdate = SCM_UNDEFINED;
 }
 
-Canvas::Canvas(QWidget *parent, QJsonDocument fieldJson)
+Canvas::Canvas(QWidget *parent, QJsonDocument fieldJson, int interval)
     : QWidget{parent}
+    , interval(interval)
     , activeColorIndex(0)
 {
     QJsonObject object = fieldJson.object();
@@ -87,6 +89,14 @@ void Canvas::setColor(int i)
     activeColorIndex = i;
 }
 
+void Canvas::setInterval(int i)
+{
+    interval = i;
+    if(timer.isActive()){
+        timer.setInterval(interval);
+    }
+}
+
 void Canvas::setUpdateFunction(SCM f)
 {
     cellUpdate = f;
@@ -94,7 +104,7 @@ void Canvas::setUpdateFunction(SCM f)
 
 void Canvas::resumeTimer()
 {
-    timer.start(300);
+    timer.start(interval);
 }
 
 void Canvas::pauseTimer()
