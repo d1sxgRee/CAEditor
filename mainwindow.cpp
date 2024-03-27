@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include <libguile.h>
 #include <QFile>
 #include <QFileDialog>
 #include <QIcon>
@@ -64,13 +63,27 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+SCM error_handler(void *, SCM key, SCM args)
+{
+    qDebug("Error in scheme code");
+    return SCM_BOOL_F;
+}
+
+
 void MainWindow::evalScript()
 {
     SCM res;
-    res = scm_c_eval_string(ui->schemeCode->toPlainText().toStdString().c_str());
+//    res = eval_script((void*)ui->schemeCode->toPlainText().toStdString().c_str());
+    res = scm_c_catch(SCM_BOOL_T, eval_script, (void*)ui->schemeCode->toPlainText().toStdString().c_str(), error_handler, NULL, NULL, NULL);
     SCM f;
     f = scm_variable_ref(scm_c_lookup("cell-update"));
     canvas->setUpdateFunction(f);
+}
+
+SCM eval_script(void *script)
+{
+    char* script_str = (char*)script;
+    return scm_c_eval_string(script_str);
 }
 
 void MainWindow::saveCode()

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <libguile.h>
 #include <QAction>
 #include <QSyntaxHighlighter>
 #include "canvas.h"
@@ -10,6 +11,11 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+extern "C" {
+    SCM eval_script(void*);
+    SCM error_handler(void*, SCM key, SCM args);
+}
 
 class MainWindow : public QMainWindow
 {
