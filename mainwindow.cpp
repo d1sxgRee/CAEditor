@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QIcon>
 #include <QKeySequence>
+#include <QMessageBox>
 #include <QTextStream>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -63,18 +64,26 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+SCM error_output_buffer;
+
 SCM error_handler(void *, SCM key, SCM args)
 {
-    qDebug("Error in scheme code");
+    scm_print_exception(error_output_buffer, SCM_BOOL_F, key, args);
     return SCM_BOOL_F;
 }
 
-
 void MainWindow::evalScript()
 {
+    error_output_buffer = scm_open_output_string();
     SCM res;
-//    res = eval_script((void*)ui->schemeCode->toPlainText().toStdString().c_str());
     res = scm_c_catch(SCM_BOOL_T, eval_script, (void*)ui->schemeCode->toPlainText().toStdString().c_str(), error_handler, NULL, NULL, NULL);
+    SCM error_string = scm_get_output_string(error_output_buffer);
+    if(scm_to_int(scm_string_length(error_string)) > 0){
+        char* error_message = scm_to_utf8_stringn(error_string, NULL);
+        QMessageBox error_box;
+        error_box.setText(QString(error_message));
+        error_box.exec();
+    }
     SCM f;
     f = scm_variable_ref(scm_c_lookup("cell-update"));
     canvas->setUpdateFunction(f);
