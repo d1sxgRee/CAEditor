@@ -12,7 +12,7 @@ CAEditor uses Scheme language to set automaton rules. You should describe `cell-
 
 #### John Conway's Game of Life
 
-[[https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life]]
+https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
 ```scheme
 (use-modules (srfi srfi-1))
@@ -23,11 +23,11 @@ CAEditor uses Scheme language to set automaton rules. You should describe `cell-
           ((= itself 1) (if (or (= 2 neighbour-sum) (= 3 neighbour-sum)) 1 0)))))
 ```
 
-[[https://github.com/d1sxgRee/CAEditor/blob/master/automata/lifegame.scm]]
+https://github.com/d1sxgRee/CAEditor/blob/master/automata/lifegame.scm
 
 #### Wireworld
 
-[[https://en.wikipedia.org/wiki/Wireworld]]
+https://en.wikipedia.org/wiki/Wireworld
 
 ```scheme
 (use-modules (srfi srfi-1))
@@ -47,4 +47,4 @@ CAEditor uses Scheme language to set automaton rules. You should describe `cell-
           ((= itself 3) 2))))
 ```
 
-[[https://github.com/d1sxgRee/CAEditor/blob/master/automata/wireworld.scm]]
+https://github.com/d1sxgRee/CAEditor/blob/master/automata/wireworld.scm
